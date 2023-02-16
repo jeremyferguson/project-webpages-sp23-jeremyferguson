@@ -46,7 +46,7 @@
             This algorithm is exactly as efficient as one which checks each sample within the bounding box.
         </p>
         <p> Here is the test4 image:</p>
-        <img src="images/task1.png" align="middle" width="400px" />
+        <img src="task1.png" align="middle" width="400px" />
         <figcaption align="middle">The pixel inspector shows the jaggies on the red triangle</figcaption>
     </div>
 
@@ -56,12 +56,12 @@
     as this would save space by not needing a larger frame buffer for a higher sampling frequency. However, I ran into issues doing this when drawing 2 triangles that shared an edge.
     The second triangle to be drawn would overwrite the first, and this created a visible line where there shouldn't have been one, e.g. in the cube image, the square faces had visible
     triangles. Bcause of this, I resized the buffer, which allows me to achieve antialiasing at the cost of more space. Here are 3 images of the image from task4 at different sampling frequencies:
-    <img src="images/task2_1.png" align="left" width="300px" /> <img src="images/task2_2.png" align="middle" width="300px" /> <img src="images/task2_3.png" align="right" width="300px" />.
+    <img src="task2_1.png" align="left" width="300px" /> <img src="task2_2.png" align="middle" width="300px" /> <img src="task2_3.png" align="right" width="300px" />.
     These effects occur because when sampling once per pixel, a lot of pixels near the sharp corner aren't counted as being inside of the triangle, but are partially in the triangle so some shading appears when sampled at a higher frequency.
 
 
     <h3 align="middle">Part 3: Transforms</h3>
-    Here is my updated robot: <img src="images/my robot.png" align="middle" width="400px" /><br />
+    Here is my updated robot: <img src="my robot.png" align="middle" width="400px" /><br />
     They are flying through the air with a jetpack on their back. You can't see the jetpack because the robot is being viewed from the front.
 
 
@@ -70,10 +70,10 @@
     <h3 align="middle">Part 4: Barycentric coordinates</h3>
     Barycentric coordinates are a way of representing points inside of a triangle. It consists of 3 coordinates, typically alpha, beta, and gamma, which represent the distance from each of the
     3 corners of the triangle. They all add up to 1 if a point is inside of a triangle. This can be visualized by outputting a weighted sum of the colors at each corner, so that the mixing of the 3 coordinates can be seen more clearly, as in this image:<br />
-    <img src="images/task4_1.png" align="middle" width="400px" />
+    <img src="task4_1.png" align="middle" width="400px" />
     <br />
     A more complex rendering of this can be seen in the test7 image, which looks like this:<br />
-    <img src="images/task4_2.png" align="middle" width="400px" />
+    <img src="task4_2.png" align="middle" width="400px" />
 
     <h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
     Pixel sampling is the process of sampling a pixel from another image for use in the image being rasterized. This occurs
@@ -83,9 +83,9 @@
     Bilinear sampling is computed by taking the four nearest pixels in the texture and performing linear interpolation twice to get a weighted
     average of the colors. Bilinear sampling is particularly effective at smoothing out sharp contrasts, as can be seen on this intersection of grid lines:
     <br />
-    <img src="images/task5-1-N.png" width="300px" /> <img src="images/task5-1-B.png" width="300px" /><br />
+    <img src="task5-1-N.png" width="300px" /> <img src="task5-1-B.png" width="300px" /><br />
     Nearest and bilinear sampling at 1 sample/pixel<br />
-    <img src="images/task5-16-N.png" width="300px" /> <img src="images/task5-16-B.png" width="300px" /><br />
+    <img src="task5-16-N.png" width="300px" /> <img src="task5-16-B.png" width="300px" /><br />
     Nearest and bilinear sampling at 16 samples/pixel
 
     <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
@@ -96,9 +96,9 @@
     Level sampling also takes up a lot of space and time, but most of that is precomputed instead of dynamic like supersampling, so it is not as bad.
     Pixel sampling is cheap in both space and time, but can make images look a bit blurrier than preferred.
     To demonstrate this, this image of lasers can be sampled at different levels and using different pixel sampling algorithms to see how it performs, specifically on areas of high contrast:<br />
-    <img src="images/task6-1.png" width="400px" /><img src="images/task6-2.png" width="400px" /><br />
+    <img src="task6-1.png" width="400px" /><img src="task6-2.png" width="400px" /><br />
     <p>Nearest pixel sampling and zero level sampling&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Bilinear pixel sampling and zero level sampling</p>
-    <img src="images/task6-3.png" width="400px" /><img src="images/task6-4.png" width="400px" /><br />
+    <img src="task6-3.png" width="400px" /><img src="task6-4.png" width="400px" /><br />
     <p>Nearest pixel sampling and nearest level sampling &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Bilinear pixel sampling and nearest level sampling</p>
     <h2 align="middle">Section III: Art Competition</h2>
     <p>If you are not participating in the optional art competition, don't worry about this section!</p>
