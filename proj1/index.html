@@ -1,7 +1,109 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 1 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Rasterizer</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2018</h1>
+    <h1 align="middle">Project 1: Rasterizer</h1>
+    <h2 align="middle">Jeremy Ferguson, CS184</h2>
+
+    <br /><br />
+
+    <div>
+
+        <h2 align="middle">Overview</h2>
+        <p>Give a high-level overview of what you implemented in this project. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the project.</p>
+
+        <h2 align="middle">Section I: Rasterization</h2>
+
+        <h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
+        <p>
+            For this part, I rasterize triangles by first finding the bounding box. I do this by finding the max and min of the 3 points on the triangles,
+            both their x and y coordinates. This gives me a rectangle over which I can iterate and sample every point within. For each point,
+            I calculate which side of the normal it is on. I also compute the winding direction, which amounts to seeing which side of the normal vector between P0 and P1 that P2 is on.
+            This gets multiplied by the L values for each sample point, so that the polarities for a point inside the triangle end up positive no matter which direction the points of the triangle
+            are listed in. For all points inside the triangle, I fill the frame buffer with the corresponding color. I assume that a sample that lies on the edge is always in the triangle.
+            This algorithm is exactly as efficient as one which checks each sample within the bounding box.
+        </p>
+        <p> Here is the test4 image:</p>
+        <img src="images/task1.png" align="middle" width="400px" />
+        <figcaption align="middle">The pixel inspector shows the jaggies on the red triangle</figcaption>
+    </div>
+
+    <h3 align="middle">Part 2: Antialiasing triangles</h3>
+    My supersampling algorithm is simply to resize the sample buffer when the sampling rate changes, and then fill that buffer when rasterizing.
+    Then, when copying into the frame buffer, the supersamples are averaged for each pixel. Initially, I planned on doing the averaging before copying over into the frame buffer,
+    as this would save space by not needing a larger frame buffer for a higher sampling frequency. However, I ran into issues doing this when drawing 2 triangles that shared an edge.
+    The second triangle to be drawn would overwrite the first, and this created a visible line where there shouldn't have been one, e.g. in the cube image, the square faces had visible
+    triangles. Bcause of this, I resized the buffer, which allows me to achieve antialiasing at the cost of more space. Here are 3 images of the image from task4 at different sampling frequencies:
+    <img src="images/task2_1.png" align="left" width="300px" /> <img src="images/task2_2.png" align="middle" width="300px" /> <img src="images/task2_3.png" align="right" width="300px" />.
+    These effects occur because when sampling once per pixel, a lot of pixels near the sharp corner aren't counted as being inside of the triangle, but are partially in the triangle so some shading appears when sampled at a higher frequency.
+
+
+    <h3 align="middle">Part 3: Transforms</h3>
+    Here is my updated robot: <img src="images/my robot.png" align="middle" width="400px" /><br />
+    They are flying through the air with a jetpack on their back. You can't see the jetpack because the robot is being viewed from the front.
+
+
+    <h2 align="middle">Section II: Sampling</h2>
+
+    <h3 align="middle">Part 4: Barycentric coordinates</h3>
+    Barycentric coordinates are a way of representing points inside of a triangle. It consists of 3 coordinates, typically alpha, beta, and gamma, which represent the distance from each of the
+    3 corners of the triangle. They all add up to 1 if a point is inside of a triangle. This can be visualized by outputting a weighted sum of the colors at each corner, so that the mixing of the 3 coordinates can be seen more clearly, as in this image:<br />
+    <img src="images/task4_1.png" align="middle" width="400px" />
+    <br />
+    A more complex rendering of this can be seen in the test7 image, which looks like this:<br />
+    <img src="images/task4_2.png" align="middle" width="400px" />
+
+    <h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
+    Pixel sampling is the process of sampling a pixel from another image for use in the image being rasterized. This occurs
+    by taking a triangle in the source and destination images that should be mapped between them, and using barycentric coordinates
+    to compute what an individual samples' color should be. This process is used for texture mapping by sampling triangles from a textured image and mapping them to pixels in the rasterized image.
+    Nearest sampling is performed by sampling the nearest pixel to the one that was computed through barycentric coordinates.
+    Bilinear sampling is computed by taking the four nearest pixels in the texture and performing linear interpolation twice to get a weighted
+    average of the colors. Bilinear sampling is particularly effective at smoothing out sharp contrasts, as can be seen on this intersection of grid lines:
+    <br />
+    <img src="images/task5-1-N.png" width="300px" /> <img src="images/task5-1-B.png" width="300px" /><br />
+    Nearest and bilinear sampling at 1 sample/pixel<br />
+    <img src="images/task5-16-N.png" width="300px" /> <img src="images/task5-16-B.png" width="300px" /><br />
+    Nearest and bilinear sampling at 16 samples/pixel
+
+    <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+
+    Level sampling is sampling textures at a different resolution depending on how big the destination triangle is compared to the source triangle. This is measured by taking the partial derivatives of the point with respect to the dimensions in the source and destination space.
+    From there, the level determines what resolution the texture should sample from, and can also be a linear interpolation of two levels for a more continuous sampling.
+    Of the 3 methods of antialiasing, supersampling is the most expensive in terms of space and time, but also tends to produce the best results.
+    Level sampling also takes up a lot of space and time, but most of that is precomputed instead of dynamic like supersampling, so it is not as bad.
+    Pixel sampling is cheap in both space and time, but can make images look a bit blurrier than preferred.
+    To demonstrate this, this image of lasers can be sampled at different levels and using different pixel sampling algorithms to see how it performs, specifically on areas of high contrast:<br />
+    <img src="images/task6-1.png" width="400px" /><img src="images/task6-2.png" width="400px" /><br />
+    <p>Nearest pixel sampling and zero level sampling&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Bilinear pixel sampling and zero level sampling</p>
+    <img src="images/task6-3.png" width="400px" /><img src="images/task6-4.png" width="400px" /><br />
+    <p>Nearest pixel sampling and nearest level sampling &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Bilinear pixel sampling and nearest level sampling</p>
+    <h2 align="middle">Section III: Art Competition</h2>
+    <p>If you are not participating in the optional art competition, don't worry about this section!</p>
+
+    <h3 align="middle">Part 7: Draw something interesting!</h3>
+
+</body>
 </html>
