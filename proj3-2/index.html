@@ -1,7 +1,166 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 100px;  
+      padding-bottom: 0.25in;  
+      padding-left: 100px;  
+    }  
+  </style> 
+<title>Jeremy Ferguson  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3-2: Additional Features to PathTracer</h1>
+    <h2 align="middle">Jeremy Ferguson</h2>
+    <h2 align="middle">Website URL: <a href="https://jeremyferguson.github.io/project-webpages-sp23-jeremyferguson/proj3-2/index.html">https://jeremyferguson.github.io/project-webpages-sp23-jeremyferguson/proj3-2/index.html</a></h2>
+
+    <div class="padded">
+
+        
+        * NOTE: For this project, you will choose TWO out of the four given parts to complete. One of those parts must be Part 1 or Part 2. In other words, you can choose any combination of two parts except the pair (Part 3, Part 4).
+
+
+        <h3 align="middle">Part 1. Mirror and Glass Materials</h3>
+        
+        <p><b>
+            Show a sequence of six images of scene `CBspheres.dae` rendered with `max_ray_depth` set to 0, 1, 2, 3, 4, 5, and 100. The other settings should be at least 64 samples per pixel and 4 samples per light. Make sure to include all screenshots.
+        </b></p>
+        <p>
+            <div align="middle">
+                <table style="width:100%">
+                    <tr align="center">
+                        <td>
+                            <img src="images/spheres_0.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 0 bounces</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/spheres_1.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 1 bounce</figcaption>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td>
+                            <img src="images/spheres_2.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 2 bounces</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/spheres_3.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 3 bounces</figcaption>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td>
+                            <img src="images/spheres_4.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 4 bounces</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/spheres_5.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 5 bounces</figcaption>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td>
+                            <img src="images/spheres_100.png" align="middle" width="400px" />
+                            <figcaption>CBspheres.dae with 100 bounces</figcaption>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </p>
+        <br>
+        <p><b>
+            Point out the new multibounce effects that appear in each image. 
+        </b></p>
+        <p>
+            
+        </p>
+        <br>
+        <p><b>
+            Explain how these bounce numbers relate to the particular effects that appear. Make sure to include all screenshots.
+        </b></p>
+        <p>
+            From 0 to  1 bounce, the spheres can be seen, but it is all black in the actual spheres, except for a small patch on each where the area light reflects directly off of it. This is because we are getting one bounce from the small patch directly up to the light. We can also tell where the spheres are because the walls are lit up, 
+            so the absence of light defines where the glass is.
+            From 1 to 2 bouncs, the left sphere refracts some light through it. This represents the ray going from the camera, out to the surface of the left sphere, and then over to the wall or floor, and finally bouncing up to the area light.
+            However, the front of the right sphere is still mostly black, because it is closer to the camera than the light itself, so there is not yet any light that gets refracted through it. However, this changes when we go from 2 bounces to 3 bounces, as we now get light that can refract through the sphere on the right and have 2 more bounces to trace back to the area light.
+            From 3 to 4 bounces, the right sphere is now getting properly reflected in the left sphere. This is because we can now trace a ray from the camera to the surface of the left sphere, to the backside of the right sphere, refracted through the right sphere to the blue wall,
+            and then up to the area light. This is how the back of the right sphere now looks blue in the reflection in the right sphere. Past 4 bounces, the images look pretty much the same.
+        </p>
+        <br>
+
+
+        <h3 align="middle">Part 2. Microfacet Material</h3>
+        <p><b>
+            Show a screenshot sequence of 4 images of scene `CBdragon_microfacet_au.dae` rendered with $\alpha$ set to 0.005, 0.05, 0.25 and 0.5. The other settings should be at least 128 samples per pixel and 1 samples per light. The number of bounces should be at least 5. Describe the differences between different images. Note that, to change the $\alpha$, just open the .dae file and search for `microfacet`.
+        </b></p>
+        <p>
+            <div align="middle">
+                <table style="width:100%">
+                    <tr align="center">
+                        <td>
+                            <img src="images/dragon_005.png" align="middle" width="400px" />
+                            <figcaption>CBdragon_microfacet_au.dae with alpha of 0.005</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/dragon_05.png" align="middle" width="400px" />
+                            <figcaption>CBdragon_microfacet_au.dae with alpha of 0.05</figcaption>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td>
+                            <img src="images/dragon_25.png" align="middle" width="400px" />
+                            <figcaption>CBdragon_microfacet_au.dae with alpha of 0.25</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/dragon_5.png" align="middle" width="400px" />
+                            <figcaption>CBdragon_microfacet_au.dae with alpha of 0.5</figcaption>
+                        </td>
+                    </tr>
+                    
+
+                </table>
+            </div>
+            <br />
+            As the alpha value increases, the material appears smoother and rougher. With a low alpha value, the material looks very shiny. However, this also adds a lot of noise, as can be seen by the white specks in the environment and the parts of the dragon that are white or black as the pixels are clipping out. This noise can be seen in alpha values 0.005 and 0.05. 0.25 achieves a good middle ground between having a small amount of noise and having enough specularity to look nice and shiny.
+        </p>
+        <br>
+        <p><b>
+            Show two images of scene `CBbunny_microfacet_cu.dae` rendered using cosine hemisphere sampling (default) and your importance sampling. The sampling rate should be fixed at 64 samples per pixel and 1 samples per light. The number of bounces should be at least 5. Briefly discuss their difference.
+        </b></p>
+        <p>
+            <div align="middle">
+                <table style="width:100%">
+                    <tr align="center">
+                        <td>
+                            <img src="images/bunny_h.png" align="middle" width="400px" />
+                            <figcaption>CBbunny_microfacet_cu.dae rendered using cosine hemisphere sampling</figcaption>
+                        </td>
+                        <td>
+                            <img src="images/bunny_i.png" align="middle" width="400px" />
+                            <figcaption>CBbunny_microfacet_cu.dae rendered using importance sampling</figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </p>
+        <br>
+        On the surface of the bunny, importance sampling results in much less noise. This is because we are able to get a wi that is more likely to be pointing in a direction that will give us information, by sampling according to the Beckmann distribution and treating the sampled angle as the half-angle so as to incorporate information about the outgoing ray angle. 
+        <p><b>
+            Show at least one image with some other conductor material, replacing `eta` and `k`. Note that you should look up values for real data rather than modifying them arbitrarily. Tell us what kind of material your parameters correspond to. 
+        </b></p>
+        <p>
+            The modified parameters for eta and k are: eta = (0.26106,0.26442,0.30786) and k = (1.1682,0.96051,0.66811). These are the conductor parameters for the element cesium. The result is below:
+            <img src="images/bunny_cesium.png" align="middle" width="400px" />
+            <figcaption>CBbunny_microfacet_cu.dae with material properties of cesium</figcaption>
+        </p>
+        <br>
+        
+</body>
 </html>
+
